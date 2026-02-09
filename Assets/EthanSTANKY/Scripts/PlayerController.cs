@@ -19,6 +19,11 @@ public class PlayerController : MonoBehaviour
     [Header("InputSystem")]
     public InputActionReference spacebar;
 
+    [Header("Money Effects")]
+    public MoneyPopup moneyPopupPrefab;
+    public Vector3 popupOffset = new Vector3(0, 1f, 0);
+
+
     private void OnEnable()
     {
         spacebar.action.performed += OnRoll;
@@ -35,14 +40,17 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         turnManager = FindFirstObjectByType<TurnManager>();
-        rb.MovePosition(boardSpaces[currentSpaceIndex].position);
+
+        DungeonGenerator gen = FindFirstObjectByType<DungeonGenerator>();
+        boardSpaces = gen.boardSpaces;
     }
+
 
     void OnRoll(InputAction.CallbackContext ctx)
     {
         if (!isMyTurn) return;
 
-        spacebar.action.Disable();   // Prevent double rolls
+        spacebar.action.Disable();  
         RollDice();
     }
 
@@ -58,6 +66,22 @@ public class PlayerController : MonoBehaviour
         Debug.Log($"Player {turnManager.currentPlayerIndex + 1} rolled: {roll}");
         StartCoroutine(MoveSpaces(roll));
     }
+    void ChangeMoney(int amount)
+    {
+        int oldMoney = money;
+        money = Mathf.Max(0, money + amount);
+        int moneyDifference = money - oldMoney;
+
+        if (moneyDifference == 0)
+            return;
+
+        if (moneyPopupPrefab != null)
+        {
+            MoneyPopup popup = Instantiate(moneyPopupPrefab, transform.position + popupOffset, Quaternion.identity);
+            popup.Setup(moneyDifference);
+        }
+    }
+
 
     IEnumerator MoveSpaces(int spaces)
     {
@@ -105,11 +129,7 @@ public class PlayerController : MonoBehaviour
             // Move backwards at double speed, no rotation
             while (Vector3.Distance(transform.position, target) > 0.1f)
             {
-                transform.position = Vector3.MoveTowards(
-                    transform.position,
-                    target,
-                    moveSpeed * 2f * Time.deltaTime
-                );
+                transform.position = Vector3.MoveTowards(transform.position,target,moveSpeed * 2f * Time.deltaTime);
 
                 yield return null;
             }
@@ -122,19 +142,20 @@ public class PlayerController : MonoBehaviour
     void ResolveSpace()
     {
         Transform space = boardSpaces[currentSpaceIndex];
+        string spaceTag = space.parent != null ? space.parent.tag : space.tag;
 
-        switch (space.tag)
+        switch (spaceTag)
         {
             case "Money":
-                money += 5;
+                ChangeMoney(+3);
                 break;
 
             case "LoseMoney":
-                money -= 5;
+                ChangeMoney(-5);
                 break;
 
             case "Explosion":
-                money -= 10;
+                ChangeMoney(-10);
                 StartCoroutine(MoveBackwards(5));
                 return; 
 

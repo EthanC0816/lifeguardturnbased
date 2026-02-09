@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,6 +16,8 @@ public class DungeonGenerator : MonoBehaviour
         public GameObject room;
         public Vector2Int minPosition;
         public Vector2Int maxPosition;
+
+
 
         public bool obligatory;
 
@@ -40,6 +42,12 @@ public class DungeonGenerator : MonoBehaviour
 
     List<Cell> board;
 
+    [Header("BoardSpaces Stuff")]
+
+    public List<int> mazePathOrder = new List<int>();
+
+    public List<Transform> boardSpaces = new List<Transform>();
+
     // Start is called before the first frame update
     void Start()
     {
@@ -48,53 +56,77 @@ public class DungeonGenerator : MonoBehaviour
 
     void GenerateDungeon()
     {
-
-        for (int i = 0; i < size.x; i++)
+        foreach (int index in mazePathOrder)
         {
-            for (int j = 0; j < size.y; j++)
+            int i = index % size.x;
+            int j = index / size.x;
+
+            Cell currentCell = board[index];
+
+            int randomRoom = -1;
+            List<int> availableRooms = new List<int>();
+
+            for (int k = 0; k < rooms.Length; k++)
             {
-                Cell currentCell = board[(i + j * size.x)];
-                if (currentCell.visited)
+                int p = rooms[k].ProbabilityOfSpawning(i, j);
+
+                if (p == 2)
                 {
-                    int randomRoom = -1;
-                    List<int> availableRooms = new List<int>();
-
-                    for (int k = 0; k < rooms.Length; k++)
-                    {
-                        int p = rooms[k].ProbabilityOfSpawning(i, j);
-
-                        if (p == 2)
-                        {
-                            randomRoom = k;
-                            break;
-                        }
-                        else if (p == 1)
-                        {
-                            availableRooms.Add(k);
-                        }
-                    }
-
-                    if (randomRoom == -1)
-                    {
-                        if (availableRooms.Count > 0)
-                        {
-                            randomRoom = availableRooms[Random.Range(0, availableRooms.Count)];
-                        }
-                        else
-                        {
-                            randomRoom = 0;
-                        }
-                    }
-
-
-                    var newRoom = Instantiate(rooms[randomRoom].room, new Vector3(i * offset.x, 0, -j * offset.y), Quaternion.identity, transform).GetComponent<RoomBehaviour>();
-                    newRoom.UpdateRoom(currentCell.status);
-                    newRoom.name += " " + i + "-" + j;
-
+                    randomRoom = k;
+                    break;
                 }
+                else if (p == 1)
+                {
+                    availableRooms.Add(k);
+                }
+            }
+
+            if (randomRoom == -1)
+            {
+                if (availableRooms.Count > 0)
+                    randomRoom = availableRooms[Random.Range(0, availableRooms.Count)];
+                else
+                    randomRoom = 0;
+            }
+
+            var newRoom = Instantiate(
+                rooms[randomRoom].room,
+                new Vector3(i * offset.x, 0, -j * offset.y),
+                Quaternion.identity,
+                transform
+            ).GetComponent<RoomBehaviour>();
+
+            newRoom.UpdateRoom(currentCell.status);
+            newRoom.name += " " + i + "-" + j;
+
+            Transform space = FindSpaceInRoom(newRoom.transform);
+            if (space != null)
+                boardSpaces.Add(space);
+        }
+    }
+
+    Transform FindSpaceInRoom(Transform room)
+    {
+        foreach (Transform child in room)
+        {
+            string n = child.name.ToLower();
+
+            if (n.Contains("space"))
+            {
+
+                foreach (Transform sub in child)
+                {
+                    string sn = sub.name.ToLower();
+                    if (sn.Contains("standpoint"))
+                        return sub;
+                }
+
+
+                return child;
             }
         }
 
+        return null;
     }
 
     void MazeGenerator()
@@ -120,13 +152,13 @@ public class DungeonGenerator : MonoBehaviour
             k++;
 
             board[currentCell].visited = true;
+            mazePathOrder.Add(currentCell);
 
             if (currentCell == board.Count - 1)
             {
                 break;
             }
 
-            //Check the cell's neighbors
             List<int> neighbors = CheckNeighbors(currentCell);
 
             if (neighbors.Count == 0)
@@ -146,9 +178,9 @@ public class DungeonGenerator : MonoBehaviour
 
                 int newCell = neighbors[Random.Range(0, neighbors.Count)];
 
+                // Inline carving (this replaces Carve)
                 if (newCell > currentCell)
                 {
-                    //down or right
                     if (newCell - 1 == currentCell)
                     {
                         board[currentCell].status[2] = true;
@@ -164,7 +196,6 @@ public class DungeonGenerator : MonoBehaviour
                 }
                 else
                 {
-                    //up or left
                     if (newCell + 1 == currentCell)
                     {
                         board[currentCell].status[3] = true;
@@ -178,41 +209,48 @@ public class DungeonGenerator : MonoBehaviour
                         board[currentCell].status[1] = true;
                     }
                 }
-
             }
-
         }
+
         GenerateDungeon();
+        StartCoroutine(TeleportPlayers());
     }
+
+
+
+    IEnumerator TeleportPlayers()
+        {
+            yield return new WaitForSeconds(2f);
+
+            PlayerController[] players = FindObjectsOfType<PlayerController>();
+
+            foreach (var p in players)
+            {
+                p.transform.position = boardSpaces[0].position;
+                p.transform.rotation = boardSpaces[0].rotation;
+            }
+        }
 
     List<int> CheckNeighbors(int cell)
     {
         List<int> neighbors = new List<int>();
 
-        //check up neighbor
         if (cell - size.x >= 0 && !board[(cell - size.x)].visited)
-        {
             neighbors.Add((cell - size.x));
-        }
 
-        //check down neighbor
         if (cell + size.x < board.Count && !board[(cell + size.x)].visited)
-        {
             neighbors.Add((cell + size.x));
-        }
 
-        //check right neighbor
         if ((cell + 1) % size.x != 0 && !board[(cell + 1)].visited)
-        {
             neighbors.Add((cell + 1));
-        }
 
-        //check left neighbor
         if (cell % size.x != 0 && !board[(cell - 1)].visited)
-        {
             neighbors.Add((cell - 1));
-        }
 
         return neighbors;
     }
+
+
 }
+
+
