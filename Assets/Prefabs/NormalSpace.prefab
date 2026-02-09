@@ -121,8 +121,8 @@ GameObject:
   - component: {fileID: 2093729245875663527}
   - component: {fileID: 7575576005878468900}
   m_Layer: 0
-  m_Name: Money Space
-  m_TagString: Money
+  m_Name: NormalSpace
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -174,7 +174,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c399afa60b1fef2459c74126cbfa701a, type: 2}
+  - {fileID: 2100000, guid: 7fb6ada278700824f8b9d3a41c297daf, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
