@@ -11,6 +11,8 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed = 3f;
 
     private TurnManager turnManager;
+    public bool isMyTurn = false;
+
 
     private Rigidbody rb;
 
@@ -32,6 +34,7 @@ public class PlayerController : MonoBehaviour
 
     void OnRoll(InputAction.CallbackContext ctx)
     {
+        if (!isMyTurn) return;
         RollDice();
 
     }
@@ -44,7 +47,7 @@ public class PlayerController : MonoBehaviour
 
     public void StartPlayerTurn()
     {
-        
+        isMyTurn = true;
     }
 
     public void RollDice()
@@ -58,16 +61,18 @@ public class PlayerController : MonoBehaviour
     {
         for (int i = 0; i < spaces; i++)
         {
+            
             currentSpaceIndex++;
 
+            
             if (currentSpaceIndex >= boardSpaces.Count - 1)
             {
                 currentSpaceIndex = boardSpaces.Count - 1;
-                break; 
             }
 
             Vector3 target = boardSpaces[currentSpaceIndex].position;
 
+            
             while (Vector3.Distance(transform.position, target) > 0.1f)
             {
                 Vector3 direction = (target - transform.position).normalized;
@@ -75,16 +80,20 @@ public class PlayerController : MonoBehaviour
                 {
                     Quaternion lookRotation = Quaternion.LookRotation(direction);
                     transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f);
-
                 }
 
                 transform.position = Vector3.MoveTowards(transform.position, target, moveSpeed * Time.deltaTime);
                 yield return null;
             }
+
+           
+            if (currentSpaceIndex == boardSpaces.Count - 1)
+                break;
         }
 
         ResolveSpace();
     }
+
 
     void ResolveSpace()
     {
@@ -125,5 +134,6 @@ public class PlayerController : MonoBehaviour
 
 
         turnManager.EndTurn();
+        isMyTurn = false;
     }
 }
