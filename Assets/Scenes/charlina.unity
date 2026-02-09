@@ -319,13 +319,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1398929358}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
+  m_LocalRotation: {x: 0.09229593, y: 0.7010574, z: -0.09229593, w: 0.7010574}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: 15, y: 90, z: 0}
 --- !u!114 &1398929361
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -384,6 +384,26 @@ MonoBehaviour:
   - room: {fileID: 7683650190133249446, guid: e62a7eb8e0a6ade48882f2c870613703, type: 3}
     minPosition: {x: 0, y: 0}
     maxPosition: {x: 0, y: 0}
+    obligatory: 1
+  - room: {fileID: 2874660669130509408, guid: 31bf5a6a40257994e89dc42140cacebd, type: 3}
+    minPosition: {x: 6, y: 6}
+    maxPosition: {x: 6, y: 6}
+    obligatory: 1
+  - room: {fileID: 5748490507707746130, guid: 9d043ae8972a6ee47a62eac0725c1add, type: 3}
+    minPosition: {x: 0, y: 0}
+    maxPosition: {x: 6, y: 6}
+    obligatory: 0
+  - room: {fileID: 3759188371144676034, guid: 7bc70c8a61a3fee469e1ea88de9d4f36, type: 3}
+    minPosition: {x: 0, y: 0}
+    maxPosition: {x: 6, y: 6}
+    obligatory: 0
+  - room: {fileID: 2943628177498991612, guid: 894196b8e63708146b95ae2577847672, type: 3}
+    minPosition: {x: 0, y: 0}
+    maxPosition: {x: 6, y: 6}
+    obligatory: 0
+  - room: {fileID: 7845926302023297649, guid: 9e99f95a2f4c25f4eb92c87900fd05cc, type: 3}
+    minPosition: {x: 0, y: 0}
+    maxPosition: {x: 6, y: 6}
     obligatory: 0
   offset: {x: 3.3, y: 3.3}
 --- !u!4 &1848818058
