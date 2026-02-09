@@ -17,6 +17,7 @@ public class TurnManager : MonoBehaviour
 
     public void EndTurn()
     {
+        players[currentPlayerIndex].isMyTurn = false;
 
         currentPlayerIndex = (currentPlayerIndex + 1 ) % players.Count;
         StartTurn();

@@ -128,12 +128,12 @@ public class PlayerController : MonoBehaviour
         if (currentSpaceIndex == boardSpaces.Count - 1)
         {
             Debug.Log("Player reached the end!");
-            // Trigger win screen, stop turns, etc.
+            turnManager.EndTurn();
+            isMyTurn = false;
             return;
         }
 
 
-        turnManager.EndTurn();
-        isMyTurn = false;
+      
     }
 }
