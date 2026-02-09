@@ -13,17 +13,23 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        turnManager = FindObjectOfType<TurnManager>();
+        turnManager = FindFirstObjectByType<TurnManager>();
+        transform.position = boardSpaces[currentSpaceIndex].position;
     }
 
     public void StartPlayerTurn()
     {
+        if (Input.GetMouseButton(0))
+        {
+            RollDice();
+        }
         // show Roll Button
     }
 
     public void RollDice()
     {
         int roll = Random.Range(1, 7);
+        Debug.Log("You rolled: " + roll);
         StartCoroutine(MoveSpaces(roll));
     }
 
@@ -63,7 +69,24 @@ public class PlayerController : MonoBehaviour
                 currentSpaceIndex = Mathf.Max(0, currentSpaceIndex - 5);
                 transform.position = boardSpaces[currentSpaceIndex].position;
                 break;
+
+            case "Start":
+                Debug.Log("Player is on the start space");
+                break;
+
+            case "End":
+                Debug.Log("Player reached the end!");
+                break;
+
         }
+
+        if (currentSpaceIndex == boardSpaces.Count - 1)
+        {
+            Debug.Log("Player reached the end!");
+            // Trigger win screen, stop turns, etc.
+            return;
+        }
+
 
         turnManager.EndTurn();
     }
