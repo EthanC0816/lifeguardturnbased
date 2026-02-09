@@ -12,12 +12,11 @@ public class PlayerController : MonoBehaviour
 
     private TurnManager turnManager;
     public bool isMyTurn = false;
-
+    public bool hasFinished = false;
 
     private Rigidbody rb;
 
     [Header("InputSystem")]
-
     public InputActionReference spacebar;
 
     private void OnEnable()
@@ -32,12 +31,6 @@ public class PlayerController : MonoBehaviour
         spacebar.action.Disable();
     }
 
-    void OnRoll(InputAction.CallbackContext ctx)
-    {
-        if (!isMyTurn) return;
-        RollDice();
-
-    }
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -45,9 +38,18 @@ public class PlayerController : MonoBehaviour
         rb.MovePosition(boardSpaces[currentSpaceIndex].position);
     }
 
+    void OnRoll(InputAction.CallbackContext ctx)
+    {
+        if (!isMyTurn) return;
+
+        spacebar.action.Disable();   // Prevent double rolls
+        RollDice();
+    }
+
     public void StartPlayerTurn()
     {
         isMyTurn = true;
+        spacebar.action.Enable();
     }
 
     public void RollDice()
@@ -61,21 +63,18 @@ public class PlayerController : MonoBehaviour
     {
         for (int i = 0; i < spaces; i++)
         {
-            
             currentSpaceIndex++;
 
-            
             if (currentSpaceIndex >= boardSpaces.Count - 1)
-            {
                 currentSpaceIndex = boardSpaces.Count - 1;
-            }
 
             Vector3 target = boardSpaces[currentSpaceIndex].position;
 
-            
             while (Vector3.Distance(transform.position, target) > 0.1f)
             {
                 Vector3 direction = (target - transform.position).normalized;
+
+                // Rotate only when moving forward
                 if (direction != Vector3.zero)
                 {
                     Quaternion lookRotation = Quaternion.LookRotation(direction);
@@ -86,7 +85,6 @@ public class PlayerController : MonoBehaviour
                 yield return null;
             }
 
-           
             if (currentSpaceIndex == boardSpaces.Count - 1)
                 break;
         }
@@ -94,6 +92,32 @@ public class PlayerController : MonoBehaviour
         ResolveSpace();
     }
 
+    IEnumerator MoveBackwards(int spaces)
+    {
+        int targetIndex = Mathf.Max(0, currentSpaceIndex - spaces);
+
+        while (currentSpaceIndex > targetIndex)
+        {
+            currentSpaceIndex--;
+
+            Vector3 target = boardSpaces[currentSpaceIndex].position;
+
+            // Move backwards at double speed, no rotation
+            while (Vector3.Distance(transform.position, target) > 0.1f)
+            {
+                transform.position = Vector3.MoveTowards(
+                    transform.position,
+                    target,
+                    moveSpeed * 2f * Time.deltaTime
+                );
+
+                yield return null;
+            }
+        }
+
+        // After backward movement, resolve the new tile
+        ResolveSpace();
+    }
 
     void ResolveSpace()
     {
@@ -111,29 +135,29 @@ public class PlayerController : MonoBehaviour
 
             case "Explosion":
                 money -= 10;
-                currentSpaceIndex = Mathf.Max(0, currentSpaceIndex - 5);
-                transform.position = boardSpaces[currentSpaceIndex].position;
-                break;
+                StartCoroutine(MoveBackwards(5));
+                return; 
 
             case "Start":
-                Debug.Log($"Player is on the start space");
+                Debug.Log("Player is on the start space");
                 break;
 
             case "End":
-                Debug.Log($"Player reached the end!");
+                Debug.Log("Player reached the end!");
                 break;
-
         }
 
+        // If player reached the end tile
         if (currentSpaceIndex == boardSpaces.Count - 1)
         {
-            Debug.Log("Player reached the end!");
-            turnManager.EndTurn();
+            hasFinished = true;
             isMyTurn = false;
+            turnManager.EndTurn();
             return;
         }
 
-
-      
+        // Normal end of turn
+        isMyTurn = false;
+        turnManager.EndTurn();
     }
 }
