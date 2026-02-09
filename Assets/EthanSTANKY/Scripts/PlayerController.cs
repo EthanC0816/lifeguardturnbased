@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
@@ -11,25 +12,45 @@ public class PlayerController : MonoBehaviour
 
     private TurnManager turnManager;
 
+    private Rigidbody rb;
+
+    [Header("InputSystem")]
+
+    public InputActionReference spacebar;
+
+    private void OnEnable()
+    {
+        spacebar.action.performed += OnRoll;
+        spacebar.action.Enable();
+    }
+
+    private void OnDisable()
+    {
+        spacebar.action.performed -= OnRoll;
+        spacebar.action.Disable();
+    }
+
+    void OnRoll(InputAction.CallbackContext ctx)
+    {
+        RollDice();
+
+    }
     void Start()
     {
+        rb = GetComponent<Rigidbody>();
         turnManager = FindFirstObjectByType<TurnManager>();
-        transform.position = boardSpaces[currentSpaceIndex].position;
+        rb.MovePosition(boardSpaces[currentSpaceIndex].position);
     }
 
     public void StartPlayerTurn()
     {
-        if (Input.GetMouseButton(0))
-        {
-            RollDice();
-        }
-        // show Roll Button
+        
     }
 
     public void RollDice()
     {
         int roll = Random.Range(1, 7);
-        Debug.Log("You rolled: " + roll);
+        Debug.Log($"Player {turnManager.currentPlayerIndex + 1} rolled: {roll}");
         StartCoroutine(MoveSpaces(roll));
     }
 
@@ -37,11 +58,26 @@ public class PlayerController : MonoBehaviour
     {
         for (int i = 0; i < spaces; i++)
         {
-            currentSpaceIndex = (currentSpaceIndex + 1) % boardSpaces.Count;
+            currentSpaceIndex++;
+
+            if (currentSpaceIndex >= boardSpaces.Count - 1)
+            {
+                currentSpaceIndex = boardSpaces.Count - 1;
+                break; 
+            }
+
             Vector3 target = boardSpaces[currentSpaceIndex].position;
 
             while (Vector3.Distance(transform.position, target) > 0.1f)
             {
+                Vector3 direction = (target - transform.position).normalized;
+                if (direction != Vector3.zero)
+                {
+                    Quaternion lookRotation = Quaternion.LookRotation(direction);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f);
+
+                }
+
                 transform.position = Vector3.MoveTowards(transform.position, target, moveSpeed * Time.deltaTime);
                 yield return null;
             }
@@ -71,11 +107,11 @@ public class PlayerController : MonoBehaviour
                 break;
 
             case "Start":
-                Debug.Log("Player is on the start space");
+                Debug.Log($"Player is on the start space");
                 break;
 
             case "End":
-                Debug.Log("Player reached the end!");
+                Debug.Log($"Player reached the end!");
                 break;
 
         }

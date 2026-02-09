@@ -1,0 +1,34 @@
+{
+    "name": "GhostInputs",
+    "maps": [
+        {
+            "name": "Player",
+            "id": "00e3ecfa-807f-4013-93a9-0d51acb65fb1",
+            "actions": [
+                {
+                    "name": "Space",
+                    "type": "Button",
+                    "id": "169ddeeb-8431-4c9f-ad6d-9c4489c5d282",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "19407a48-a261-4cd6-bd2e-9b11bc039cda",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Space",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

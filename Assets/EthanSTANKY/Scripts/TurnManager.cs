@@ -4,7 +4,7 @@ using UnityEngine;
 public class TurnManager : MonoBehaviour
 {
     public List<PlayerController> players;
-    private int currentPlayerIndex = 0;
+    public int currentPlayerIndex = 0;
     void Start()
     {
         StartTurn();
