@@ -6379,13 +6379,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1398929358}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.056692794, y: 0, z: 0, w: 0.99839175}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: -6.5, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1398929361
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6773,7 +6773,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7299192f213ca9d4b815823fda051d87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: {x: 7, y: 7}
+  size: {x: 4, y: 4}
   startPos: 0
   rooms:
   - room: {fileID: 7683650190133249446, guid: e62a7eb8e0a6ade48882f2c870613703, type: 3}
@@ -6781,8 +6781,8 @@ MonoBehaviour:
     maxPosition: {x: 0, y: 0}
     obligatory: 1
   - room: {fileID: 2874660669130509408, guid: 31bf5a6a40257994e89dc42140cacebd, type: 3}
-    minPosition: {x: 6, y: 6}
-    maxPosition: {x: 6, y: 6}
+    minPosition: {x: 3, y: 3}
+    maxPosition: {x: 3, y: 3}
     obligatory: 1
   - room: {fileID: 5748490507707746130, guid: 9d043ae8972a6ee47a62eac0725c1add, type: 3}
     minPosition: {x: 0, y: 0}
