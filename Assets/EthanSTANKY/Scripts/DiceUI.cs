@@ -7,12 +7,14 @@ public class DiceUI : MonoBehaviour
     public static DiceUI Instance;
 
     public TextMeshProUGUI diceText;
+    Vector3 startPos;
 
     public ParticleSystem spawnParticles;
 
     private void Awake()
     {
         Instance = this;
+        startPos = diceText.rectTransform.position;
         diceText.gameObject.SetActive(false);
     }
 
@@ -37,10 +39,10 @@ public class DiceUI : MonoBehaviour
     {
         float duration = 2f;
         float floatSpeed = 100f;
-        Vector3 startPos;
+        
         float t = 0;
 
-        startPos = diceText.rectTransform.position;
+        
         spawnParticles.startColor = diceText.color * Color.gray;
         spawnParticles.Play();
 

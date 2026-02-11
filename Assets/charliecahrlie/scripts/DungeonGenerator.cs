@@ -44,6 +44,18 @@ public class DungeonGenerator : MonoBehaviour
         MazeGenerator();
     }
 
+    private void Awake()
+    {
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 100;
+    }
+
+    private void Update()
+    {
+        if(Application.targetFrameRate != 100)
+            Application.targetFrameRate = 100;
+    }
+
     void GenerateDungeon()
     {
         foreach (int index in mazePathOrder)

@@ -132,7 +132,9 @@ public class PlayerController : MonoBehaviour
                 break;
         }
 
-        ResolveSpace();
+        yield return StartCoroutine(ResolveSpace());
+
+
     }
 
     IEnumerator MoveBackwards(int spaces)
@@ -154,12 +156,13 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        yield return new WaitForSeconds(1.5f);
+        
         // After backward movement, resolve the new tile
-        ResolveSpace();
+        yield return StartCoroutine(ResolveSpace());
+
     }
 
-    void ResolveSpace()
+    IEnumerator ResolveSpace()
     {
         Transform space = boardSpaces[currentSpaceIndex];
         string spaceTag = space.parent != null ? space.parent.tag : space.tag;
@@ -176,8 +179,8 @@ public class PlayerController : MonoBehaviour
 
             case "Explosion":
                 ChangeMoney(-10);
-                StartCoroutine(MoveBackwards(5));
-                return; 
+                yield return StartCoroutine(MoveBackwards(4));
+                yield break;
 
             case "Start":
                 Debug.Log("Player is on the start space");
@@ -188,18 +191,20 @@ public class PlayerController : MonoBehaviour
                 break;
         }
 
-        // If player reached the end tile
+        // Pause before ending turn
+        yield return new WaitForSeconds(1.5f);
+
         if (currentSpaceIndex == boardSpaces.Count - 1)
         {
             hasFinished = true;
             isMyTurn = false;
             turnManager.EndTurn();
-            return;
+            yield break;
         }
 
-        // Normal end of turn
         isMyTurn = false;
         spacebar.action.Disable();
         turnManager.EndTurn();
     }
+
 }
