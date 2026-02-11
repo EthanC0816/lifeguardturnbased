@@ -17,8 +17,8 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     private Camera faceCam;
     private Transform faceCamPos;
-    private FaceCamFollow faceCamFollow;
 
+    public LayerMask FaceCamMask;
 
     [Header("InputSystem")]
     public InputActionReference spacebar;
@@ -45,7 +45,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         turnManager = FindFirstObjectByType<TurnManager>();
         faceCam = GameObject.Find("FaceCamera").GetComponent<Camera>();
-        faceCamFollow = faceCam.GetComponent<FaceCamFollow>();
+        faceCamPos = transform.Find("FaceCamPos");
         if (!faceCam.enabled)
             faceCam.gameObject.SetActive(true);
         DungeonGenerator gen = FindFirstObjectByType<DungeonGenerator>();
@@ -60,6 +60,16 @@ public class PlayerController : MonoBehaviour
         RollDice();
 
     }
+
+    void LateUpdate()
+    {
+        if (isMyTurn && faceCamPos != null)
+        {
+            faceCam.transform.position = faceCamPos.position;
+            faceCam.transform.rotation = faceCamPos.rotation;
+        }
+    }
+
 
     public void StartPlayerTurn()
     {
@@ -144,6 +154,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        yield return new WaitForSeconds(1.5f);
         // After backward movement, resolve the new tile
         ResolveSpace();
     }

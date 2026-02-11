@@ -5777,6 +5777,10 @@ PrefabInstance:
       propertyPath: moneyPopupPrefab
       value: 
       objectReference: {fileID: 8545289674776026385, guid: c2aadc92533ca2a4db89c08a834a0715, type: 3}
+    - target: {fileID: 9051756112181429099, guid: 3fab34586dbfea940aa6b0fea909fbd2, type: 3}
+      propertyPath: FaceCamMask.m_Bits
+      value: 512
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -6061,6 +6065,10 @@ PrefabInstance:
       propertyPath: moneyPopupPrefab
       value: 
       objectReference: {fileID: 8545289674776026385, guid: c2aadc92533ca2a4db89c08a834a0715, type: 3}
+    - target: {fileID: 1838201495037330026, guid: 5f608186d917868488735d094b3cb0c8, type: 3}
+      propertyPath: FaceCamMask.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
     - target: {fileID: 3650709000745179483, guid: 5f608186d917868488735d094b3cb0c8, type: 3}
       propertyPath: m_Name
       value: Ghost 1
@@ -6068,6 +6076,10 @@ PrefabInstance:
     - target: {fileID: 3650709000745179483, guid: 5f608186d917868488735d094b3cb0c8, type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3650709000745179483, guid: 5f608186d917868488735d094b3cb0c8, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4552765141430013768, guid: 5f608186d917868488735d094b3cb0c8, type: 3}
       propertyPath: m_Layer
@@ -6532,6 +6544,10 @@ PrefabInstance:
       propertyPath: moneyPopupPrefab
       value: 
       objectReference: {fileID: 8545289674776026385, guid: c2aadc92533ca2a4db89c08a834a0715, type: 3}
+    - target: {fileID: 2893578373028158771, guid: 87fa548224f089f438a109ed47e3a69b, type: 3}
+      propertyPath: FaceCamMask.m_Bits
+      value: 256
+      objectReference: {fileID: 0}
     - target: {fileID: 4077450882441329867, guid: 87fa548224f089f438a109ed47e3a69b, type: 3}
       propertyPath: m_Layer
       value: 8
@@ -6772,6 +6788,10 @@ PrefabInstance:
       propertyPath: moneyPopupPrefab
       value: 
       objectReference: {fileID: 8545289674776026385, guid: c2aadc92533ca2a4db89c08a834a0715, type: 3}
+    - target: {fileID: 8529899650461734044, guid: b698f82c95c02df40a6a9a938414a347, type: 3}
+      propertyPath: FaceCamMask.m_Bits
+      value: 128
+      objectReference: {fileID: 0}
     - target: {fileID: 8912596895712357136, guid: b698f82c95c02df40a6a9a938414a347, type: 3}
       propertyPath: m_Layer
       value: 7

@@ -32,6 +32,9 @@ public class TurnManager : MonoBehaviour
 
         followCamera.SetTarget(players[currentPlayerIndex].transform, followCamera.offset);
 
+        Camera faceCam = GameObject.Find("FaceCamera").GetComponent<Camera>();
+        faceCam.cullingMask = players[currentPlayerIndex].FaceCamMask;
+
         players[currentPlayerIndex].StartPlayerTurn();
     }
 
