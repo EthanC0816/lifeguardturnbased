@@ -52,6 +52,7 @@ public class PlayerController : MonoBehaviour
 
         spacebar.action.Disable();  
         RollDice();
+
     }
 
     public void StartPlayerTurn()
@@ -63,6 +64,7 @@ public class PlayerController : MonoBehaviour
     public void RollDice()
     {
         int roll = Random.Range(1, 7);
+        DiceUI.Instance.ShowRoll(roll);
         Debug.Log($"Player {turnManager.currentPlayerIndex + 1} rolled: {roll}");
         StartCoroutine(MoveSpaces(roll));
     }

@@ -12,6 +12,8 @@ public class TurnManager : MonoBehaviour
     private int turnsTakenThisRound = 0;
     private int activePlayersAtRoundStart = 0;
 
+    public CameraFollow followCamera;
+
     void Start()
     {
         StartTurn();
@@ -27,6 +29,8 @@ public class TurnManager : MonoBehaviour
                 if (!p.hasFinished)
                     activePlayersAtRoundStart++;
         }
+
+        followCamera.SetTarget(players[currentPlayerIndex].transform, followCamera.offset);
 
         players[currentPlayerIndex].StartPlayerTurn();
     }
