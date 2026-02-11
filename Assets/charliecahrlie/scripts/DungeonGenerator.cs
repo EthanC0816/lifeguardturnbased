@@ -79,12 +79,7 @@ public class DungeonGenerator : MonoBehaviour
                     randomRoom = 0;
             }
 
-            var newRoom = Instantiate(
-                rooms[randomRoom].room,
-                new Vector3(i * offset.x, 0, -j * offset.y),
-                Quaternion.identity,
-                transform
-            ).GetComponent<RoomBehaviour>();
+            var newRoom = Instantiate(rooms[randomRoom].room,new Vector3(i * offset.x, 0, -j * offset.y), Quaternion.identity,transform).GetComponent<RoomBehaviour>();
 
             newRoom.UpdateRoom(currentCell.status);
             newRoom.name += " " + i + "-" + j;
@@ -184,7 +179,7 @@ public class DungeonGenerator : MonoBehaviour
 
     IEnumerator TeleportPlayers()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(0.5f);
 
         PlayerController[] players = FindObjectsOfType<PlayerController>();
 

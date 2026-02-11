@@ -23,7 +23,10 @@ public class CameraFollow : MonoBehaviour
         
         Vector3 desiredPos = target.position + currentOffset;
         transform.position = Vector3.Lerp(transform.position, desiredPos, followSpeed * Time.deltaTime);
-        transform.rotation = Quaternion.Lerp(transform.rotation,target.rotation, rotationLerpSpeed * Time.deltaTime);
+
+        Quaternion lookRotation = Quaternion.LookRotation(target.position - transform.position);
+        transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, rotationLerpSpeed * Time.deltaTime);
+
     }
     public void SetTarget(Transform newTarget, Vector3 newOffset)
     {

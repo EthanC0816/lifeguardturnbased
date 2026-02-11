@@ -15,6 +15,10 @@ public class PlayerController : MonoBehaviour
     public bool hasFinished = false;
 
     private Rigidbody rb;
+    private Camera faceCam;
+    private Transform faceCamPos;
+    private FaceCamFollow faceCamFollow;
+
 
     [Header("InputSystem")]
     public InputActionReference spacebar;
@@ -40,7 +44,10 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         turnManager = FindFirstObjectByType<TurnManager>();
-
+        faceCam = GameObject.Find("FaceCamera").GetComponent<Camera>();
+        faceCamFollow = faceCam.GetComponent<FaceCamFollow>();
+        if (!faceCam.enabled)
+            faceCam.gameObject.SetActive(true);
         DungeonGenerator gen = FindFirstObjectByType<DungeonGenerator>();
         boardSpaces = gen.boardSpaces;
     }
@@ -48,8 +55,7 @@ public class PlayerController : MonoBehaviour
 
     void OnRoll(InputAction.CallbackContext ctx)
     {
-        if (!isMyTurn) return;
-
+       if(!isMyTurn) return;
         spacebar.action.Disable();  
         RollDice();
 
@@ -63,6 +69,7 @@ public class PlayerController : MonoBehaviour
 
     public void RollDice()
     {
+        if (!isMyTurn) return;
         int roll = Random.Range(1, 7);
         DiceUI.Instance.ShowRoll(roll);
         Debug.Log($"Player {turnManager.currentPlayerIndex + 1} rolled: {roll}");
@@ -181,6 +188,7 @@ public class PlayerController : MonoBehaviour
 
         // Normal end of turn
         isMyTurn = false;
+        spacebar.action.Disable();
         turnManager.EndTurn();
     }
 }
