@@ -16,23 +16,18 @@ public class DungeonGenerator : MonoBehaviour
         public GameObject room;
         public Vector2Int minPosition;
         public Vector2Int maxPosition;
-
-
-
         public bool obligatory;
 
         public int ProbabilityOfSpawning(int x, int y)
         {
-            // 0 - cannot spawn 1 - can spawn 2 - HAS to spawn
-
-            if (x >= minPosition.x && x <= maxPosition.x && y >= minPosition.y && y <= maxPosition.y)
+            if (x >= minPosition.x && x <= maxPosition.x &&
+                y >= minPosition.y && y <= maxPosition.y)
             {
                 return obligatory ? 2 : 1;
             }
 
             return 0;
         }
-
     }
 
     public Vector2Int size;
@@ -41,14 +36,9 @@ public class DungeonGenerator : MonoBehaviour
     public Vector2 offset;
 
     List<Cell> board;
-
-    [Header("BoardSpaces Stuff")]
-
     public List<int> mazePathOrder = new List<int>();
-
     public List<Transform> boardSpaces = new List<Transform>();
 
-    // Start is called before the first frame update
     void Start()
     {
         MazeGenerator();
@@ -113,14 +103,12 @@ public class DungeonGenerator : MonoBehaviour
 
             if (n.Contains("space"))
             {
-
                 foreach (Transform sub in child)
                 {
                     string sn = sub.name.ToLower();
                     if (sn.Contains("standpoint"))
                         return sub;
                 }
-
 
                 return child;
             }
@@ -141,74 +129,52 @@ public class DungeonGenerator : MonoBehaviour
             }
         }
 
-        int currentCell = startPos;
+        mazePathOrder.Clear();
 
-        Stack<int> path = new Stack<int>();
-
-        int k = 0;
-
-        while (k < 1000)
+        for (int j = 0; j < size.y; j++)
         {
-            k++;
-
-            board[currentCell].visited = true;
-            mazePathOrder.Add(currentCell);
-
-            if (currentCell == board.Count - 1)
+            if (j % 2 == 0)
             {
-                break;
-            }
-
-            List<int> neighbors = CheckNeighbors(currentCell);
-
-            if (neighbors.Count == 0)
-            {
-                if (path.Count == 0)
+                for (int i = 0; i < size.x; i++)
                 {
-                    break;
-                }
-                else
-                {
-                    currentCell = path.Pop();
+                    int index = j * size.x + i;
+                    mazePathOrder.Add(index);
                 }
             }
             else
             {
-                path.Push(currentCell);
-
-                int newCell = neighbors[Random.Range(0, neighbors.Count)];
-
-                // Inline carving (this replaces Carve)
-                if (newCell > currentCell)
+                for (int i = size.x - 1; i >= 0; i--)
                 {
-                    if (newCell - 1 == currentCell)
-                    {
-                        board[currentCell].status[2] = true;
-                        currentCell = newCell;
-                        board[currentCell].status[3] = true;
-                    }
-                    else
-                    {
-                        board[currentCell].status[1] = true;
-                        currentCell = newCell;
-                        board[currentCell].status[0] = true;
-                    }
+                    int index = j * size.x + i;
+                    mazePathOrder.Add(index);
                 }
-                else
-                {
-                    if (newCell + 1 == currentCell)
-                    {
-                        board[currentCell].status[3] = true;
-                        currentCell = newCell;
-                        board[currentCell].status[2] = true;
-                    }
-                    else
-                    {
-                        board[currentCell].status[0] = true;
-                        currentCell = newCell;
-                        board[currentCell].status[1] = true;
-                    }
-                }
+            }
+        }
+
+        for (int k = 0; k < mazePathOrder.Count - 1; k++)
+        {
+            int a = mazePathOrder[k];
+            int b = mazePathOrder[k + 1];
+
+            if (b == a + 1)
+            {
+                board[a].status[2] = true;
+                board[b].status[3] = true;
+            }
+            else if (b == a - 1)
+            {
+                board[a].status[3] = true;
+                board[b].status[2] = true;
+            }
+            else if (b == a + size.x)
+            {
+                board[a].status[1] = true;
+                board[b].status[0] = true;
+            }
+            else if (b == a - size.x)
+            {
+                board[a].status[0] = true;
+                board[b].status[1] = true;
             }
         }
 
@@ -216,21 +182,18 @@ public class DungeonGenerator : MonoBehaviour
         StartCoroutine(TeleportPlayers());
     }
 
-
-
     IEnumerator TeleportPlayers()
+    {
+        yield return new WaitForSeconds(2f);
+
+        PlayerController[] players = FindObjectsOfType<PlayerController>();
+
+        foreach (var p in players)
         {
-            yield return new WaitForSeconds(2f);
-
-            PlayerController[] players = FindObjectsOfType<PlayerController>();
-
-            foreach (var p in players)
-            {
-                p.transform.position = boardSpaces[0].position;
-                p.transform.rotation = boardSpaces[0].rotation;
-            }
+            p.transform.position = boardSpaces[0].position;
+            p.transform.rotation = boardSpaces[0].rotation;
         }
-
+    }
     List<int> CheckNeighbors(int cell)
     {
         List<int> neighbors = new List<int>();
@@ -249,8 +212,4 @@ public class DungeonGenerator : MonoBehaviour
 
         return neighbors;
     }
-
-
 }
-
-
