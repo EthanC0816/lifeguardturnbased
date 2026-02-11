@@ -13,6 +13,8 @@ public class PlayerController : MonoBehaviour
     private TurnManager turnManager;
     public bool isMyTurn = false;
     public bool hasFinished = false;
+    private bool movedBackwards = false;
+
 
     private Rigidbody rb;
     private Camera faceCam;
@@ -156,9 +158,10 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        
-        // After backward movement, resolve the new tile
+
+        movedBackwards = true;
         yield return StartCoroutine(ResolveSpace());
+        movedBackwards = false;
 
     }
 
@@ -166,6 +169,19 @@ public class PlayerController : MonoBehaviour
     {
         Transform space = boardSpaces[currentSpaceIndex];
         string spaceTag = space.parent != null ? space.parent.tag : space.tag;
+
+        if (movedBackwards && spaceTag == "Start")
+        {
+            // Skip start tile effects when moving backwards
+            yield return new WaitForSeconds(1f);
+
+            isMyTurn = false;
+            spacebar.action.Disable();
+            turnManager.EndTurn();
+            yield break;
+        }
+
+
 
         switch (spaceTag)
         {
