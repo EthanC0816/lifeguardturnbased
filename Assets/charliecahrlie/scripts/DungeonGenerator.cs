@@ -47,13 +47,13 @@ public class DungeonGenerator : MonoBehaviour
     private void Awake()
     {
         QualitySettings.vSyncCount = 0;
-        Application.targetFrameRate = 100;
+        Application.targetFrameRate = 60;
     }
 
     private void Update()
     {
-        if(Application.targetFrameRate != 100)
-            Application.targetFrameRate = 100;
+        if(Application.targetFrameRate != 60)
+            Application.targetFrameRate = 60;
     }
 
     void GenerateDungeon()
@@ -96,9 +96,16 @@ public class DungeonGenerator : MonoBehaviour
             newRoom.UpdateRoom(currentCell.status);
             newRoom.name += " " + i + "-" + j;
 
-            Transform space = FindSpaceInRoom(newRoom.transform);
-            if (space != null)
-                boardSpaces.Add(space);
+            if (boardSpaces.Count == 0)
+            {
+                List<Transform> spawns = FindSpawnPoints(newRoom.transform);
+
+                // Sort by name: SpawnPoint1, SpawnPoint2, SpawnPoint3, SpawnPoint4
+                spawns.Sort((a, b) => a.name.CompareTo(b.name));
+
+                boardSpaces.AddRange(spawns);
+            }
+
         }
     }
 
@@ -188,6 +195,22 @@ public class DungeonGenerator : MonoBehaviour
         GenerateDungeon();
         StartCoroutine(TeleportPlayers());
     }
+    List<Transform> FindSpawnPoints(Transform room)
+    {
+        List<Transform> points = new List<Transform>();
+
+        Transform spawnParent = room.Find("SpawnPoints"); // or whatever the parent is called
+
+        if (spawnParent != null)
+        {
+            foreach (Transform child in spawnParent)
+            {
+                points.Add(child);
+            }
+        }
+
+        return points;
+    }
 
     IEnumerator TeleportPlayers()
     {
@@ -195,12 +218,22 @@ public class DungeonGenerator : MonoBehaviour
 
         PlayerController[] players = FindObjectsOfType<PlayerController>();
 
-        foreach (var p in players)
+        System.Array.Sort(players, (a, b) => a.name.CompareTo(b.name));
+
+        for (int i = 0; i < players.Length; i++)
         {
-            p.transform.position = boardSpaces[0].position;
-            p.transform.rotation = boardSpaces[0].rotation;
+            if (i < boardSpaces.Count)
+            {
+                players[i].transform.position = boardSpaces[i].position;
+                players[i].transform.rotation = boardSpaces[i].rotation * Quaternion.Euler(0, 180, 0); 
+            }
+            else
+            {
+                Debug.LogWarning("Not enough spawn points for all players!");
+            }
         }
     }
+
     List<int> CheckNeighbors(int cell)
     {
         List<int> neighbors = new List<int>();
