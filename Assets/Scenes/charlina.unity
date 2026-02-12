@@ -7265,6 +7265,13 @@ MonoBehaviour:
     maxPosition: {x: 6, y: 6}
     obligatory: 0
   offset: {x: 3.3, y: 3.3}
+  ghosts:
+  - {fileID: 1843188282}
+  - {fileID: 1194340142}
+  - {fileID: 232543729}
+  - {fileID: 1854835835}
+  ghostRiseHeight: 2
+  ghostRiseTime: 1.5
   mazePathOrder: 
   boardSpaces: []
 --- !u!4 &1848818058

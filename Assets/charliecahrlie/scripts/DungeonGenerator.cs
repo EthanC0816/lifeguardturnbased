@@ -35,6 +35,10 @@ public class DungeonGenerator : MonoBehaviour
     public Rule[] rooms;
     public Vector2 offset;
 
+    public Transform[] ghosts; 
+    public float ghostRiseHeight = 2f;
+    public float ghostRiseTime = 1.5f;
+
     List<Cell> board;
     public List<int> mazePathOrder = new List<int>();
     public List<Transform> boardSpaces = new List<Transform>();
@@ -109,27 +113,7 @@ public class DungeonGenerator : MonoBehaviour
         }
     }
 
-    Transform FindSpaceInRoom(Transform room)
-    {
-        foreach (Transform child in room)
-        {
-            string n = child.name.ToLower();
-
-            if (n.Contains("space"))
-            {
-                foreach (Transform sub in child)
-                {
-                    string sn = sub.name.ToLower();
-                    if (sn.Contains("standpoint"))
-                        return sub;
-                }
-
-                return child;
-            }
-        }
-
-        return null;
-    }
+ 
 
     void MazeGenerator()
     {
@@ -194,6 +178,7 @@ public class DungeonGenerator : MonoBehaviour
 
         GenerateDungeon();
         StartCoroutine(TeleportPlayers());
+        StartCoroutine(GhostRiseSequence());
     }
     List<Transform> FindSpawnPoints(Transform room)
     {
@@ -233,6 +218,47 @@ public class DungeonGenerator : MonoBehaviour
             }
         }
     }
+    IEnumerator GhostRiseSequence()
+    {
+        
+        yield return new WaitForSeconds(1f);
+
+        // >>> PLACE TO ADD FOG LATER <<<
+        // PlayFog();
+
+        
+        float riseTime = 1.5f;
+        float riseHeight = 2f;
+        float elapsed = 0f;
+
+
+        Transform[] ghostsToRaise = ghosts;
+
+
+        Vector3[] startPos = new Vector3[ghosts.Length];
+        Vector3[] endPos = new Vector3[ghosts.Length];
+
+        for (int i = 0; i < ghosts.Length; i++)
+        {
+            startPos[i] = ghosts[i].transform.position;
+            endPos[i] = startPos[i] + new Vector3(0, riseHeight, 0);
+        }
+
+        
+        while (elapsed < riseTime)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / riseTime;
+
+            for (int i = 0; i < ghosts.Length; i++)
+            {
+                ghosts[i].transform.position = Vector3.Lerp(startPos[i], endPos[i], t);
+            }
+
+            yield return null;
+        }
+    }
+
 
     List<int> CheckNeighbors(int cell)
     {
