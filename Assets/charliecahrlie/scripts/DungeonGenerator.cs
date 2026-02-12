@@ -36,7 +36,6 @@ public class DungeonGenerator : MonoBehaviour
     public Vector2 offset;
 
     public Transform[] ghosts;
-    public bool[] ghostOccupied;
 
 
     List<Cell> board;
@@ -97,22 +96,15 @@ public class DungeonGenerator : MonoBehaviour
                     randomRoom = 0;
             }
 
-            var newRoom = Instantiate(
-                rooms[randomRoom].room,
-                new Vector3(i * offset.x, 0, -j * offset.y),
-                Quaternion.identity,
-                transform
-            ).GetComponent<RoomBehaviour>();
+            var newRoom = Instantiate(rooms[randomRoom].room,new Vector3(i * offset.x, 0, -j * offset.y),Quaternion.identity,transform).GetComponent<RoomBehaviour>();
 
             newRoom.UpdateRoom(currentCell.status);
             newRoom.name += " " + i + "-" + j;
 
-            // Grave spawn points
             List<Transform> spawns = FindSpawnPoints(newRoom.transform);
             spawns.Sort((a, b) => a.name.CompareTo(b.name));
             graveSpawnPoints.AddRange(spawns);
 
-            // Board tile
             Transform tile = FindBoardSpace(newRoom.transform);
             if (tile != null)
             {
@@ -201,7 +193,6 @@ public class DungeonGenerator : MonoBehaviour
         }
 
         GenerateDungeon();
-        ghostOccupied = new bool[boardSpaces.Count];
         StartCoroutine(TeleportPlayers());
         StartCoroutine(GhostRiseSequence());
     }

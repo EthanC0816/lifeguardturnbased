@@ -3,13 +3,18 @@ using System.Collections;
 
 public class PlayerUI : MonoBehaviour
 {
-    [SerializeField] private RectTransform playerRect;
-    [SerializeField] private RectTransform coinText;       // "Coins" label
-    [SerializeField] private RectTransform user;
-    [SerializeField] private RectTransform coinRect;       // Background
-    [SerializeField] private TMPro.TextMeshProUGUI coinNumberText; // Actual number
+    public GameObject titleText;
+    public GameObject startText;
 
-    // NEW: Round number text (only variable added)
+    [SerializeField] private RectTransform titleTransform;
+    [SerializeField] private RectTransform startTransform;
+
+    [SerializeField] private RectTransform playerRect;
+    [SerializeField] private RectTransform coinText;       
+    [SerializeField] private RectTransform user;
+    [SerializeField] private RectTransform coinRect;       
+    [SerializeField] private TMPro.TextMeshProUGUI coinNumberText; 
+
     [SerializeField] private TMPro.TextMeshProUGUI roundNumberText;
 
     private RectTransform coinNumberTransform;
@@ -40,8 +45,30 @@ public class PlayerUI : MonoBehaviour
         coinNumberTransform.localScale = new Vector3(1f, 0f, 1f);
         roundNumberTransform.localScale = new Vector3(1f, 0f, 1f);
 
+        titleTransform = titleText.GetComponent<RectTransform>();
+        startTransform = startText.GetComponent<RectTransform>();
+
+        titleTransform.localScale = new Vector3(0f, 0f, 1f);
+        startTransform.localScale = new Vector3(0f, 0f, 1f);
+
+        StartCoroutine(MainMenuAnimations());
         StartCoroutine(WaitForGameStart());
     }
+
+    private IEnumerator MainMenuAnimations()
+    {
+        yield return new WaitForSeconds(0.5f);
+        titleTransform.LeanScale(new Vector3(1f, 1f, 1f), 0.8f).setEaseOutBack();
+
+        yield return new WaitForSeconds(0.6f);
+        startTransform.LeanScale(new Vector3(1f, 1f, 1f), 0.8f).setEaseOutBack();
+        while (!MainMenu.gameStarted)
+            yield return null;
+
+        titleText.SetActive(false);
+        startText.SetActive(false);
+    }
+
     private IEnumerator WaitForGameStart()
     {
         while (!MainMenu.gameStarted)

@@ -8,4 +8,5 @@ public class MainMenu : MonoBehaviour
     {
         gameStarted = true;
     }
+    
 }
