@@ -35,13 +35,15 @@ public class DungeonGenerator : MonoBehaviour
     public Rule[] rooms;
     public Vector2 offset;
 
-    public Transform[] ghosts; 
-    public float ghostRiseHeight = 2f;
-    public float ghostRiseTime = 1.5f;
+    public Transform[] ghosts;
+    public bool[] ghostOccupied;
+
 
     List<Cell> board;
     public List<int> mazePathOrder = new List<int>();
     public List<Transform> boardSpaces = new List<Transform>();
+    public List<Transform> graveSpawnPoints = new List<Transform>();
+
 
     void Start()
     {
@@ -95,25 +97,47 @@ public class DungeonGenerator : MonoBehaviour
                     randomRoom = 0;
             }
 
-            var newRoom = Instantiate(rooms[randomRoom].room,new Vector3(i * offset.x, 0, -j * offset.y), Quaternion.identity,transform).GetComponent<RoomBehaviour>();
+            var newRoom = Instantiate(
+                rooms[randomRoom].room,
+                new Vector3(i * offset.x, 0, -j * offset.y),
+                Quaternion.identity,
+                transform
+            ).GetComponent<RoomBehaviour>();
 
             newRoom.UpdateRoom(currentCell.status);
             newRoom.name += " " + i + "-" + j;
 
-            if (boardSpaces.Count == 0)
+            // Grave spawn points
+            List<Transform> spawns = FindSpawnPoints(newRoom.transform);
+            spawns.Sort((a, b) => a.name.CompareTo(b.name));
+            graveSpawnPoints.AddRange(spawns);
+
+            // Board tile
+            Transform tile = FindBoardSpace(newRoom.transform);
+            if (tile != null)
             {
-                List<Transform> spawns = FindSpawnPoints(newRoom.transform);
-
-                // Sort by name: SpawnPoint1, SpawnPoint2, SpawnPoint3, SpawnPoint4
-                spawns.Sort((a, b) => a.name.CompareTo(b.name));
-
-                boardSpaces.AddRange(spawns);
+                boardSpaces.Add(tile);
             }
-
+            else
+            {
+                Debug.LogError($"Room {newRoom.name} has NO Standpoint tile!");
+            }
         }
     }
 
- 
+
+    Transform FindBoardSpace(Transform room)
+    {
+        foreach (Transform t in room.GetComponentsInChildren<Transform>(true))
+        {
+            if (t.name.ToLower().EndsWith("standpoint"))
+                return t;
+        }
+
+        return null;
+    }
+
+
 
     void MazeGenerator()
     {
@@ -177,6 +201,7 @@ public class DungeonGenerator : MonoBehaviour
         }
 
         GenerateDungeon();
+        ghostOccupied = new bool[boardSpaces.Count];
         StartCoroutine(TeleportPlayers());
         StartCoroutine(GhostRiseSequence());
     }
@@ -207,10 +232,12 @@ public class DungeonGenerator : MonoBehaviour
 
         for (int i = 0; i < players.Length; i++)
         {
-            if (i < boardSpaces.Count)
+            if (i < graveSpawnPoints.Count)
             {
-                players[i].transform.position = boardSpaces[i].position;
-                players[i].transform.rotation = boardSpaces[i].rotation * Quaternion.Euler(0, 180, 0); 
+                players[i].transform.position = graveSpawnPoints[i].position;
+                players[i].transform.rotation = graveSpawnPoints[i].rotation * Quaternion.Euler(0, 180, 0);
+
+                players[i].currentSpaceIndex = 0;
             }
             else
             {
@@ -220,20 +247,11 @@ public class DungeonGenerator : MonoBehaviour
     }
     IEnumerator GhostRiseSequence()
     {
-        
         yield return new WaitForSeconds(1f);
 
-        // >>> PLACE TO ADD FOG LATER <<<
-        // PlayFog();
-
-        
-        float riseTime = 1.5f;
-        float riseHeight = 2f;
+        float riseTime = 2;
+        float targetY = 0.2f;
         float elapsed = 0f;
-
-
-        Transform[] ghostsToRaise = ghosts;
-
 
         Vector3[] startPos = new Vector3[ghosts.Length];
         Vector3[] endPos = new Vector3[ghosts.Length];
@@ -241,10 +259,15 @@ public class DungeonGenerator : MonoBehaviour
         for (int i = 0; i < ghosts.Length; i++)
         {
             startPos[i] = ghosts[i].transform.position;
-            endPos[i] = startPos[i] + new Vector3(0, riseHeight, 0);
+
+            
+            endPos[i] = new Vector3(
+                startPos[i].x,
+                targetY,
+                startPos[i].z
+            );
         }
 
-        
         while (elapsed < riseTime)
         {
             elapsed += Time.deltaTime;
@@ -257,25 +280,13 @@ public class DungeonGenerator : MonoBehaviour
 
             yield return null;
         }
+
+        
+        for (int i = 0; i < ghosts.Length; i++)
+        {
+            ghosts[i].transform.position = endPos[i];
+        }
     }
 
 
-    List<int> CheckNeighbors(int cell)
-    {
-        List<int> neighbors = new List<int>();
-
-        if (cell - size.x >= 0 && !board[(cell - size.x)].visited)
-            neighbors.Add((cell - size.x));
-
-        if (cell + size.x < board.Count && !board[(cell + size.x)].visited)
-            neighbors.Add((cell + size.x));
-
-        if ((cell + 1) % size.x != 0 && !board[(cell + 1)].visited)
-            neighbors.Add((cell + 1));
-
-        if (cell % size.x != 0 && !board[(cell - 1)].visited)
-            neighbors.Add((cell - 1));
-
-        return neighbors;
-    }
 }

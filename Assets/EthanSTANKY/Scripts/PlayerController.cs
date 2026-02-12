@@ -186,7 +186,6 @@ public class PlayerController : MonoBehaviour
         }
 
 
-
         switch (spaceTag)
         {
             case "Money":
