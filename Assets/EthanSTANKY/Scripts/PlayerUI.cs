@@ -15,6 +15,8 @@ public class PlayerUI : MonoBehaviour
     private RectTransform coinNumberTransform;
     private RectTransform roundNumberTransform;
 
+    public GameObject spaceToRollText;
+
     private bool hasShownFirstPlayer = false;
 
     private void Awake()
@@ -73,18 +75,12 @@ public class PlayerUI : MonoBehaviour
     {
         coinNumberText.text = amount.ToString();
 
-        LeanTween.cancel(coinNumberTransform);
-        coinNumberTransform.localScale = new Vector3(1f, 0f, 1f);
-        CoinNumberText();
+        StartCoroutine(PlayCoinAnimation());
     }
 
-    // NEW: Update round number
     public void UpdateRound(int round)
     {
         roundNumberText.text = $"Round: {round}";
-
-        LeanTween.cancel(roundNumberTransform);
-        roundNumberTransform.localScale = new Vector3(1f, 0f, 1f);
         RoundNumberText();
     }
 
@@ -113,11 +109,18 @@ public class PlayerUI : MonoBehaviour
         CoinNumberText();
     }
 
-    // NEW: intro animation for round number
     private IEnumerator ShowRoundTextAfterDelay()
     {
         yield return new WaitForSeconds(3f);
         RoundNumberText();
+    }
+
+    private IEnumerator PlayCoinAnimation()
+    {
+        LeanTween.cancel(coinNumberTransform);
+        coinNumberTransform.localScale = new Vector3(1f, 0f, 1f);
+        yield return null;
+        CoinNumberText();
     }
 
     public void PlayerBackground()
@@ -140,7 +143,6 @@ public class PlayerUI : MonoBehaviour
         coinNumberTransform.LeanScaleY(1f, 0.5f).setEaseOutElastic();
     }
 
-    // NEW: animation for round number
     public void RoundNumberText()
     {
         roundNumberTransform.LeanScaleY(1f, 0.5f).setEaseOutElastic();

@@ -15,10 +15,10 @@ public class PlayerController : MonoBehaviour
     public bool hasFinished = false;
     private bool movedBackwards = false;
 
-
     private Rigidbody rb;
     private Camera faceCam;
     private Transform faceCamPos;
+    public PlayerUI uiScript;
 
     public LayerMask FaceCamMask;
 
@@ -44,6 +44,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        uiScript = FindFirstObjectByType<PlayerUI>();
         rb = GetComponent<Rigidbody>();
         turnManager = FindFirstObjectByType<TurnManager>();
         faceCam = GameObject.Find("FaceCamera").GetComponent<Camera>();
@@ -58,8 +59,8 @@ public class PlayerController : MonoBehaviour
     void OnRoll(InputAction.CallbackContext ctx)
     {
         if (!MainMenu.gameStarted) return;
-
         if (!isMyTurn) return;
+        uiScript.spaceToRollText.SetActive(false);
         spacebar.action.Disable();  
         RollDice();
 
@@ -78,6 +79,7 @@ public class PlayerController : MonoBehaviour
     public void StartPlayerTurn()
     {
         isMyTurn = true;
+        uiScript.spaceToRollText.SetActive(true);
         spacebar.action.Enable();
     }
 
@@ -220,7 +222,6 @@ public class PlayerController : MonoBehaviour
             turnManager.EndTurn();
             yield break;
         }
-
         isMyTurn = false;
         spacebar.action.Disable();
         turnManager.EndTurn();

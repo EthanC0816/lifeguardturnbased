@@ -280,7 +280,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &544515031
 RectTransform:
   m_ObjectHideFlags: 0
@@ -394,7 +394,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 1
+  m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -6474,6 +6474,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9051756112181429099, guid: 3fab34586dbfea940aa6b0fea909fbd2, type: 3}
+      propertyPath: uiScript
+      value: 
+      objectReference: {fileID: 1629021802}
+    - target: {fileID: 9051756112181429099, guid: 3fab34586dbfea940aa6b0fea909fbd2, type: 3}
       propertyPath: moveSpeed
       value: 3
       objectReference: {fileID: 0}
@@ -6482,12 +6486,20 @@ PrefabInstance:
       value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 9051756112181429099, guid: 3fab34586dbfea940aa6b0fea909fbd2, type: 3}
+      propertyPath: spaceToRollText
+      value: 
+      objectReference: {fileID: 544515030}
+    - target: {fileID: 9051756112181429099, guid: 3fab34586dbfea940aa6b0fea909fbd2, type: 3}
       propertyPath: moneyPopupPrefab
       value: 
       objectReference: {fileID: 8545289674776026385, guid: c2aadc92533ca2a4db89c08a834a0715, type: 3}
     - target: {fileID: 9051756112181429099, guid: 3fab34586dbfea940aa6b0fea909fbd2, type: 3}
       propertyPath: FaceCamMask.m_Bits
       value: 512
+      objectReference: {fileID: 0}
+    - target: {fileID: 9051756112181429099, guid: 3fab34586dbfea940aa6b0fea909fbd2, type: 3}
+      propertyPath: boardSpaces.Array.size
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6745,7 +6757,7 @@ GameObject:
   - component: {fileID: 1439268401}
   - component: {fileID: 1439268400}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: StartText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6790,17 +6802,17 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Button
+  m_text: START
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: ceecc517172d1554b8460ef79dc4f7f1, type: 2}
+  m_sharedMaterial: {fileID: 3668280148750992805, guid: ceecc517172d1554b8460ef79dc4f7f1, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281479730
-  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -6817,8 +6829,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 197.16
+  m_fontSizeBase: 197.16
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -6926,6 +6938,7 @@ MonoBehaviour:
   coinRect: {fileID: 1046140214}
   coinNumberText: {fileID: 1020116551}
   roundNumberText: {fileID: 1156870458}
+  spaceToRollText: {fileID: 1852713654}
 --- !u!114 &1629021803
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6990,6 +7003,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1838201495037330026, guid: 5f608186d917868488735d094b3cb0c8, type: 3}
+      propertyPath: uiScript
+      value: 
+      objectReference: {fileID: 1629021802}
+    - target: {fileID: 1838201495037330026, guid: 5f608186d917868488735d094b3cb0c8, type: 3}
       propertyPath: moveSpeed
       value: 3
       objectReference: {fileID: 0}
@@ -6998,12 +7015,20 @@ PrefabInstance:
       value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 1838201495037330026, guid: 5f608186d917868488735d094b3cb0c8, type: 3}
+      propertyPath: spaceToRollText
+      value: 
+      objectReference: {fileID: 544515030}
+    - target: {fileID: 1838201495037330026, guid: 5f608186d917868488735d094b3cb0c8, type: 3}
       propertyPath: moneyPopupPrefab
       value: 
       objectReference: {fileID: 8545289674776026385, guid: c2aadc92533ca2a4db89c08a834a0715, type: 3}
     - target: {fileID: 1838201495037330026, guid: 5f608186d917868488735d094b3cb0c8, type: 3}
       propertyPath: FaceCamMask.m_Bits
       value: 64
+      objectReference: {fileID: 0}
+    - target: {fileID: 1838201495037330026, guid: 5f608186d917868488735d094b3cb0c8, type: 3}
+      propertyPath: boardSpaces.Array.size
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3650709000745179483, guid: 5f608186d917868488735d094b3cb0c8, type: 3}
       propertyPath: m_Name
@@ -7301,12 +7326,12 @@ GameObject:
   - component: {fileID: 1852713657}
   - component: {fileID: 1852713656}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Press To Roll Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1852713655
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7466,8 +7491,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 129.9259, y: 46.175903}
-  m_SizeDelta: {x: 419.8518, y: 122.3519}
+  m_AnchoredPosition: {x: 0, y: -232}
+  m_SizeDelta: {x: 788.0072, y: 229.6386}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1943221991
 MonoBehaviour:
@@ -7490,8 +7515,8 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 0}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 0}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
@@ -7538,7 +7563,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -7651,7 +7676,7 @@ Transform:
   m_GameObject: {fileID: 2046578980}
   serializedVersion: 2
   m_LocalRotation: {x: 0.1554001, y: 0, z: 0, w: 0.9878516}
-  m_LocalPosition: {x: -0.03, y: 0.63, z: -0.1}
+  m_LocalPosition: {x: 0, y: 0.63, z: -0.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7745,6 +7770,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2893578373028158771, guid: 87fa548224f089f438a109ed47e3a69b, type: 3}
+      propertyPath: uiScript
+      value: 
+      objectReference: {fileID: 1629021802}
+    - target: {fileID: 2893578373028158771, guid: 87fa548224f089f438a109ed47e3a69b, type: 3}
       propertyPath: moveSpeed
       value: 3
       objectReference: {fileID: 0}
@@ -7753,12 +7782,20 @@ PrefabInstance:
       value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 2893578373028158771, guid: 87fa548224f089f438a109ed47e3a69b, type: 3}
+      propertyPath: spaceToRollText
+      value: 
+      objectReference: {fileID: 544515030}
+    - target: {fileID: 2893578373028158771, guid: 87fa548224f089f438a109ed47e3a69b, type: 3}
       propertyPath: moneyPopupPrefab
       value: 
       objectReference: {fileID: 8545289674776026385, guid: c2aadc92533ca2a4db89c08a834a0715, type: 3}
     - target: {fileID: 2893578373028158771, guid: 87fa548224f089f438a109ed47e3a69b, type: 3}
       propertyPath: FaceCamMask.m_Bits
       value: 256
+      objectReference: {fileID: 0}
+    - target: {fileID: 2893578373028158771, guid: 87fa548224f089f438a109ed47e3a69b, type: 3}
+      propertyPath: boardSpaces.Array.size
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4077450882441329867, guid: 87fa548224f089f438a109ed47e3a69b, type: 3}
       propertyPath: m_Layer
@@ -7989,6 +8026,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8529899650461734044, guid: b698f82c95c02df40a6a9a938414a347, type: 3}
+      propertyPath: uiScript
+      value: 
+      objectReference: {fileID: 1629021802}
+    - target: {fileID: 8529899650461734044, guid: b698f82c95c02df40a6a9a938414a347, type: 3}
       propertyPath: moveSpeed
       value: 3
       objectReference: {fileID: 0}
@@ -7997,12 +8038,20 @@ PrefabInstance:
       value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 8529899650461734044, guid: b698f82c95c02df40a6a9a938414a347, type: 3}
+      propertyPath: spaceToRollText
+      value: 
+      objectReference: {fileID: 544515030}
+    - target: {fileID: 8529899650461734044, guid: b698f82c95c02df40a6a9a938414a347, type: 3}
       propertyPath: moneyPopupPrefab
       value: 
       objectReference: {fileID: 8545289674776026385, guid: c2aadc92533ca2a4db89c08a834a0715, type: 3}
     - target: {fileID: 8529899650461734044, guid: b698f82c95c02df40a6a9a938414a347, type: 3}
       propertyPath: FaceCamMask.m_Bits
       value: 128
+      objectReference: {fileID: 0}
+    - target: {fileID: 8529899650461734044, guid: b698f82c95c02df40a6a9a938414a347, type: 3}
+      propertyPath: boardSpaces.Array.size
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8912596895712357136, guid: b698f82c95c02df40a6a9a938414a347, type: 3}
       propertyPath: m_Layer
