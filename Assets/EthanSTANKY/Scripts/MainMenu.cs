@@ -2,18 +2,10 @@ using UnityEngine;
 
 public class MainMenu : MonoBehaviour
 {
-    public bool gameStarted = false;
+    public static bool gameStarted = false;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void StartGame()
     {
-        if (gameStarted)
-        gameStarted = false;
-    }
-
-    
-    void Update()
-    {
-        
+        gameStarted = true;
     }
 }

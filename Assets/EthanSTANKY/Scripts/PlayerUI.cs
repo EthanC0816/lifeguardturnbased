@@ -3,49 +3,85 @@ using System.Collections;
 
 public class PlayerUI : MonoBehaviour
 {
-    [SerializeField] private RectTransform playerRect;     
-    [SerializeField] private RectTransform coinText;       
-    [SerializeField] private RectTransform user;           
-    [SerializeField] private RectTransform coinRect;       
+    [SerializeField] private RectTransform playerRect;
+    [SerializeField] private RectTransform coinText;       // "Coins" label
+    [SerializeField] private RectTransform user;
+    [SerializeField] private RectTransform coinRect;       // Background
+    [SerializeField] private TMPro.TextMeshProUGUI coinNumberText; // Actual number
+
+    // NEW: Round number text (only variable added)
+    [SerializeField] private TMPro.TextMeshProUGUI roundNumberText;
+
+    private RectTransform coinNumberTransform;
+    private RectTransform roundNumberTransform;
+
+    private bool hasShownFirstPlayer = false;
 
     private void Awake()
     {
-        
-        if (playerRect == null) playerRect = GameObject.Find("PlayerTitleBackground").GetComponent<RectTransform>();
-        if (user == null) user = GameObject.Find("PlayerName").GetComponent<RectTransform>();
-        if (coinRect == null) coinRect = GameObject.Find("CoinsBackground").GetComponent<RectTransform>();
-        if (coinText == null) coinText = GameObject.Find("CoinsText").GetComponent<RectTransform>();
-
-        
         playerRect.pivot = new Vector2(0f, 0.5f);
         coinRect.pivot = new Vector2(0f, 0.5f);
         user.pivot = new Vector2(0.5f, 0f);
         coinText.pivot = new Vector2(0.5f, 0f);
+
+        coinNumberTransform = coinNumberText.GetComponent<RectTransform>();
+        roundNumberTransform = roundNumberText.GetComponent<RectTransform>();
     }
 
     private void Start()
     {
-        
+        if (!MainMenu.gameStarted) return;
         playerRect.localScale = new Vector3(0f, 1f, 1f);
         coinRect.localScale = new Vector3(0f, 1f, 1f);
         user.localScale = new Vector3(1f, 0f, 1f);
         coinText.localScale = new Vector3(1f, 0f, 1f);
+        coinNumberTransform.localScale = new Vector3(1f, 0f, 1f);
 
-        // Timed animations
+        // NEW: hide round text at start
+        roundNumberTransform.localScale = new Vector3(1f, 0f, 1f);
+
         StartCoroutine(ShowBackgroundAfterDelay());
         StartCoroutine(ShowUsernameAfterDelay());
         StartCoroutine(ShowCoinsBackgroundAfterDelay());
         StartCoroutine(ShowCoinTextAfterDelay());
+        StartCoroutine(ShowRoundTextAfterDelay());
     }
 
     public void ShowPlayerTurn(int playerIndex)
     {
+        if (!hasShownFirstPlayer)
+        {
+            hasShownFirstPlayer = true;
+            return;
+        }
+
+        var player = FindFirstObjectByType<TurnManager>().players[playerIndex];
+
         user.GetComponent<TMPro.TextMeshProUGUI>().text = $"Player {playerIndex + 1}";
+        UpdateCoins(player.money);
 
         user.localScale = new Vector3(1f, 0f, 1f);
         PlayerUser();
     }
 
+    public void UpdateCoins(int amount)
+    {
+        coinNumberText.text = amount.ToString();
+
+        LeanTween.cancel(coinNumberTransform);
+        coinNumberTransform.localScale = new Vector3(1f, 0f, 1f);
+        CoinNumberText();
+    }
+
+    // NEW: Update round number
+    public void UpdateRound(int round)
+    {
+        roundNumberText.text = $"Round: {round}";
+
+        LeanTween.cancel(roundNumberTransform);
+        roundNumberTransform.localScale = new Vector3(1f, 0f, 1f);
+        RoundNumberText();
+    }
 
     private IEnumerator ShowBackgroundAfterDelay()
     {
@@ -69,6 +105,14 @@ public class PlayerUI : MonoBehaviour
     {
         yield return new WaitForSeconds(2.5f);
         CoinText();
+        CoinNumberText();
+    }
+
+    // NEW: intro animation for round number
+    private IEnumerator ShowRoundTextAfterDelay()
+    {
+        yield return new WaitForSeconds(3f);
+        RoundNumberText();
     }
 
     public void PlayerBackground()
@@ -84,6 +128,17 @@ public class PlayerUI : MonoBehaviour
     public void CoinText()
     {
         coinText.LeanScaleY(1f, 0.5f).setEaseOutElastic();
+    }
+
+    public void CoinNumberText()
+    {
+        coinNumberTransform.LeanScaleY(1f, 0.5f).setEaseOutElastic();
+    }
+
+    // NEW: animation for round number
+    public void RoundNumberText()
+    {
+        roundNumberTransform.LeanScaleY(1f, 0.5f).setEaseOutElastic();
     }
 
     public void PlayerUser()

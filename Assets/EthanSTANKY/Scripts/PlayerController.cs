@@ -44,6 +44,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        if (!MainMenu.gameStarted) return;
         rb = GetComponent<Rigidbody>();
         turnManager = FindFirstObjectByType<TurnManager>();
         faceCam = GameObject.Find("FaceCamera").GetComponent<Camera>();
@@ -57,7 +58,9 @@ public class PlayerController : MonoBehaviour
 
     void OnRoll(InputAction.CallbackContext ctx)
     {
-       if(!isMyTurn) return;
+        if (!MainMenu.gameStarted) return;
+
+        if (!isMyTurn) return;
         spacebar.action.Disable();  
         RollDice();
 
@@ -101,6 +104,8 @@ public class PlayerController : MonoBehaviour
             MoneyPopup popup = Instantiate(moneyPopupPrefab, transform.position + popupOffset, Quaternion.identity);
             popup.Setup(moneyDifference);
         }
+        FindFirstObjectByType<PlayerUI>().UpdateCoins(money);
+
     }
 
 

@@ -8,8 +8,6 @@ public class CameraFollow : MonoBehaviour
     public float offsetLerpSpeed = 3f;
     public float rotationLerpSpeed = 3f;
 
-    public MainMenu menuScript;
-
     private Vector3 currentOffset;
     
     void Start()
@@ -20,7 +18,7 @@ public class CameraFollow : MonoBehaviour
     private void LateUpdate()
     {
         if (target == null) return;
-        if (menuScript.gameStarted == true)
+        if (MainMenu.gameStarted)
         {
             currentOffset = Vector3.Lerp(currentOffset, offset, offsetLerpSpeed * Time.deltaTime);
 

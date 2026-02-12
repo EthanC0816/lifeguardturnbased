@@ -16,12 +16,13 @@ public class TurnManager : MonoBehaviour
 
     void Start()
     {
+        if (!MainMenu.gameStarted) return;
         StartTurn();
     }
 
     void StartTurn()
     {
-       
+        if (!MainMenu.gameStarted) return;
         if (turnsTakenThisRound == 0)
         {
             activePlayersAtRoundStart = 0;
@@ -42,6 +43,7 @@ public class TurnManager : MonoBehaviour
 
     public void EndTurn()
     {
+        if (!MainMenu.gameStarted) return;
         players[currentPlayerIndex].isMyTurn = false;
         turnsTakenThisRound++;
 
@@ -63,6 +65,9 @@ public class TurnManager : MonoBehaviour
         {
             currentRound++;
             turnsTakenThisRound = 0;
+
+            FindFirstObjectByType<PlayerUI>().UpdateRound(currentRound);
+
 
             Debug.Log($"--- ROUND {currentRound} STARTING ---");
 
