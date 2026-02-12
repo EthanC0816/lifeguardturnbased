@@ -14,15 +14,19 @@ public class TurnManager : MonoBehaviour
 
     public CameraFollow followCamera;
 
-    void Start()
+    private bool turnStarted = false;
+
+    void Update()
     {
-        if (!MainMenu.gameStarted) return;
-        StartTurn();
+        if (!turnStarted && MainMenu.gameStarted)
+        {
+            turnStarted = true;
+            StartTurn();
+        }
     }
 
     void StartTurn()
     {
-        if (!MainMenu.gameStarted) return;
         if (turnsTakenThisRound == 0)
         {
             activePlayersAtRoundStart = 0;
@@ -43,7 +47,6 @@ public class TurnManager : MonoBehaviour
 
     public void EndTurn()
     {
-        if (!MainMenu.gameStarted) return;
         players[currentPlayerIndex].isMyTurn = false;
         turnsTakenThisRound++;
 

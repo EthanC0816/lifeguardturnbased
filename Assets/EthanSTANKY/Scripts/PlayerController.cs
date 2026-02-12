@@ -44,7 +44,6 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        if (!MainMenu.gameStarted) return;
         rb = GetComponent<Rigidbody>();
         turnManager = FindFirstObjectByType<TurnManager>();
         faceCam = GameObject.Find("FaceCamera").GetComponent<Camera>();

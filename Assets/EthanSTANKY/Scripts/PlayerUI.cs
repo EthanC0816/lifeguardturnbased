@@ -30,15 +30,20 @@ public class PlayerUI : MonoBehaviour
 
     private void Start()
     {
-        if (!MainMenu.gameStarted) return;
+
         playerRect.localScale = new Vector3(0f, 1f, 1f);
         coinRect.localScale = new Vector3(0f, 1f, 1f);
         user.localScale = new Vector3(1f, 0f, 1f);
         coinText.localScale = new Vector3(1f, 0f, 1f);
         coinNumberTransform.localScale = new Vector3(1f, 0f, 1f);
-
-        // NEW: hide round text at start
         roundNumberTransform.localScale = new Vector3(1f, 0f, 1f);
+
+        StartCoroutine(WaitForGameStart());
+    }
+    private IEnumerator WaitForGameStart()
+    {
+        while (!MainMenu.gameStarted)
+            yield return null;
 
         StartCoroutine(ShowBackgroundAfterDelay());
         StartCoroutine(ShowUsernameAfterDelay());
