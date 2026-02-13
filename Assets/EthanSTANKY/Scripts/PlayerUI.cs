@@ -87,6 +87,13 @@ public class PlayerUI : MonoBehaviour
         while (!MainMenu.gameStarted)
             yield return null;
 
+        titleTransform.LeanScale(Vector3.zero, 0.4f).setEaseInBack();
+        startTransform.LeanScale(Vector3.zero, 0.4f).setEaseInBack();
+        yield return new WaitForSeconds(0.4f);
+
+        titleText.SetActive(false); 
+        startText.SetActive(false);
+
         StartCoroutine(ShowBackgroundAfterDelay());
         StartCoroutine(ShowUsernameAfterDelay());
         StartCoroutine(ShowCoinsBackgroundAfterDelay());

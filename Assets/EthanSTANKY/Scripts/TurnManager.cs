@@ -6,7 +6,7 @@ public class TurnManager : MonoBehaviour
     public List<PlayerController> players;
     public int currentPlayerIndex = 0;
 
-    public int totalRounds = 10;
+    public int totalRounds;
     public int currentRound = 1;
 
     private int turnsTakenThisRound = 0;
@@ -16,6 +16,10 @@ public class TurnManager : MonoBehaviour
 
     private bool turnStarted = false;
 
+    private void Start()
+    {
+        totalRounds = MainMenu.chosenRounds;
+    }
     void Update()
     {
         if (!turnStarted && MainMenu.gameStarted)
@@ -23,6 +27,27 @@ public class TurnManager : MonoBehaviour
             turnStarted = true;
             StartTurn();
         }
+    }
+    public void ApplyPlayerCount()
+    {
+        PlayerController[] allPlayers = FindObjectsOfType<PlayerController>(true);
+
+        System.Array.Sort(allPlayers, (a, b) => a.name.CompareTo(b.name));
+
+        int count = MainMenu.playerCount;
+
+        players = new List<PlayerController>();
+
+        for (int i = 0; i < count; i++)
+        {
+            allPlayers[i].gameObject.SetActive(true);
+            players.Add(allPlayers[i]);
+        }
+
+        for (int i = count; i < allPlayers.Length; i++)
+            allPlayers[i].gameObject.SetActive(false);
+
+        currentPlayerIndex = 0;
     }
 
     void StartTurn()

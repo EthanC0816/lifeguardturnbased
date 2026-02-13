@@ -43,9 +43,9 @@ public class DungeonGenerator : MonoBehaviour
     public List<Transform> boardSpaces = new List<Transform>();
     public List<Transform> graveSpawnPoints = new List<Transform>();
 
-
     void Start()
     {
+        ApplyRoundSettings();
         MazeGenerator();
     }
 
@@ -60,6 +60,29 @@ public class DungeonGenerator : MonoBehaviour
         if(Application.targetFrameRate != 60)
             Application.targetFrameRate = 60;
     }
+
+    public void ApplyRoundSettings()
+    {
+        if (MainMenu.chosenRounds == 5)
+        {
+            size = new Vector2Int(5, 5);
+            rooms[1].minPosition = new Vector2Int(4, 4);
+            rooms[1].maxPosition = new Vector2Int(4, 4);
+        }
+        else if (MainMenu.chosenRounds == 10)
+        {
+            size = new Vector2Int(7, 7);
+            rooms[1].minPosition = new Vector2Int(6, 6);
+            rooms[1].maxPosition = new Vector2Int(6, 6);
+        }
+        else if (MainMenu.chosenRounds == 20)
+        {
+            size = new Vector2Int(9, 9);
+            rooms[1].minPosition = new Vector2Int(8, 8);
+            rooms[1].maxPosition = new Vector2Int(8, 8);
+        }
+    }
+
 
     void GenerateDungeon()
     {
@@ -117,7 +140,6 @@ public class DungeonGenerator : MonoBehaviour
         }
     }
 
-
     Transform FindBoardSpace(Transform room)
     {
         foreach (Transform t in room.GetComponentsInChildren<Transform>(true))
@@ -128,9 +150,6 @@ public class DungeonGenerator : MonoBehaviour
 
         return null;
     }
-
-
-
     void MazeGenerator()
     {
         board = new List<Cell>();
@@ -193,9 +212,24 @@ public class DungeonGenerator : MonoBehaviour
         }
 
         GenerateDungeon();
+    }
+    public void ActivatePlayersAndGhosts()
+    {
         StartCoroutine(TeleportPlayers());
         StartCoroutine(GhostRiseSequence());
     }
+    public void RegenerateDungeon()
+    {
+        foreach (Transform child in transform)
+            Destroy(child.gameObject);
+        boardSpaces.Clear();
+        graveSpawnPoints.Clear();
+     
+        ApplyRoundSettings();
+        MazeGenerator();
+        ActivatePlayersAndGhosts();
+    }
+
     List<Transform> FindSpawnPoints(Transform room)
     {
         List<Transform> points = new List<Transform>();
@@ -215,37 +249,25 @@ public class DungeonGenerator : MonoBehaviour
 
     IEnumerator TeleportPlayers()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.1f);
 
-        // Include inactive players too
         PlayerController[] players = FindObjectsOfType<PlayerController>(true);
-
         System.Array.Sort(players, (a, b) => a.name.CompareTo(b.name));
 
         int activePlayers = Mathf.Min(MainMenu.playerCount, players.Length);
 
-        // First, set active state correctly
         for (int i = 0; i < players.Length; i++)
-        {
-            bool shouldBeActive = i < activePlayers;
-            players[i].gameObject.SetActive(shouldBeActive);
-        }
+            players[i].gameObject.SetActive(i < activePlayers);
 
-        // Then teleport only the active ones
         for (int i = 0; i < activePlayers; i++)
         {
-            if (i < graveSpawnPoints.Count)
-            {
-                players[i].transform.position = graveSpawnPoints[i].position;
-                players[i].transform.rotation = graveSpawnPoints[i].rotation * Quaternion.Euler(0, 180, 0);
-                players[i].currentSpaceIndex = 0;
-            }
-            else
-            {
-                Debug.LogWarning("Not enough spawn points for all players!");
-            }
+            players[i].transform.position = graveSpawnPoints[i].position;
+            players[i].transform.rotation = graveSpawnPoints[i].rotation * Quaternion.Euler(0, 180, 0);
+            players[i].currentSpaceIndex = 0;
         }
+        FindFirstObjectByType<TurnManager>().ApplyPlayerCount();
     }
+
 
     IEnumerator GhostRiseSequence()
     {
