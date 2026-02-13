@@ -17,6 +17,12 @@ public class PlayerUI : MonoBehaviour
 
     [SerializeField] private TMPro.TextMeshProUGUI roundNumberText;
 
+    public RectTransform playerAmountText;
+    public RectTransform twoPlayersButton;
+    public RectTransform threePlayersButton;
+    public RectTransform fourPlayersButton;
+
+
     private RectTransform coinNumberTransform;
     private RectTransform roundNumberTransform;
 
@@ -37,7 +43,10 @@ public class PlayerUI : MonoBehaviour
 
     private void Start()
     {
-
+        playerAmountText.localScale = new Vector3(0f, 0f, 1f);
+        twoPlayersButton.localScale = new Vector3(0f, 0f, 1f);
+        threePlayersButton.localScale = new Vector3(0f, 0f, 1f);
+        fourPlayersButton.localScale = new Vector3(0f, 0f, 1f);
         playerRect.localScale = new Vector3(0f, 1f, 1f);
         coinRect.localScale = new Vector3(0f, 1f, 1f);
         user.localScale = new Vector3(1f, 0f, 1f);
@@ -52,21 +61,25 @@ public class PlayerUI : MonoBehaviour
         startTransform.localScale = new Vector3(0f, 0f, 1f);
 
         StartCoroutine(MainMenuAnimations());
+        ShowPlayerAmountMenu();
         StartCoroutine(WaitForGameStart());
     }
 
+
     private IEnumerator MainMenuAnimations()
     {
-        yield return new WaitForSeconds(0.5f);
-        titleTransform.LeanScale(new Vector3(1f, 1f, 1f), 0.8f).setEaseOutBack();
+    yield return new WaitForSeconds(0.5f);
+    titleTransform.LeanScale(new Vector3(1f, 1f, 1f), 0.8f).setEaseOutBack();
 
-        yield return new WaitForSeconds(0.6f);
-        startTransform.LeanScale(new Vector3(1f, 1f, 1f), 0.8f).setEaseOutBack();
-        while (!MainMenu.gameStarted)
-            yield return null;
+    yield return new WaitForSeconds(0.2f);
+    twoPlayersButton.LeanScale(new Vector3(1f, 1f, 1f), 0.8f).setEaseOutBack();
 
-        titleText.SetActive(false);
-        startText.SetActive(false);
+    yield return new WaitForSeconds(0.2f);
+    threePlayersButton.LeanScale(new Vector3(1f, 1f, 1f), 0.8f).setEaseOutBack();
+
+    yield return new WaitForSeconds(0.2f);
+    fourPlayersButton.LeanScale(new Vector3(1f, 1f, 1f), 0.8f).setEaseOutBack();
+
     }
 
     private IEnumerator WaitForGameStart()
@@ -96,6 +109,54 @@ public class PlayerUI : MonoBehaviour
 
         user.localScale = new Vector3(1f, 0f, 1f);
         PlayerUser();
+    }
+
+    public void PlayStartButtonAnimation()
+    {
+        startTransform.localScale = new Vector3(0f, 0f, 1f);
+        startTransform.LeanScale(new Vector3(1f, 1f, 1f), 0.8f).setEaseOutBack();
+    }
+    public void BackToPlayerSelect()
+    {
+        MainMenu.playerCountChosen = false;
+
+        ShowPlayerAmountMenu();       
+        startText.SetActive(false);           
+        startTransform.localScale = Vector3.zero; 
+    }
+
+
+    public void ShowPlayerAmountMenu()
+    {
+        playerAmountText.localScale = Vector3.zero;
+        twoPlayersButton.localScale = Vector3.zero;
+        threePlayersButton.localScale = Vector3.zero;
+        fourPlayersButton.localScale = Vector3.zero;
+
+        StartCoroutine(AnimatePlayerAmountMenuIn());
+    }
+
+    public void HidePlayerAmountMenu()
+    {
+        playerAmountText.LeanScale(Vector3.zero, 0.3f).setEaseInBack();
+        twoPlayersButton.LeanScale(Vector3.zero, 0.3f).setEaseInBack();
+        threePlayersButton.LeanScale(Vector3.zero, 0.3f).setEaseInBack();
+        fourPlayersButton.LeanScale(Vector3.zero, 0.3f).setEaseInBack();
+    }
+
+    private IEnumerator AnimatePlayerAmountMenuIn()
+    {
+        yield return new WaitForSeconds(0.4f);
+        playerAmountText.LeanScale(Vector3.one, 0.8f).setEaseOutBack();
+
+        yield return new WaitForSeconds(0.15f);
+        twoPlayersButton.LeanScale(Vector3.one, 0.8f).setEaseOutBack();
+
+        yield return new WaitForSeconds(0.15f);
+        threePlayersButton.LeanScale(Vector3.one, 0.8f).setEaseOutBack();
+
+        yield return new WaitForSeconds(0.15f);
+        fourPlayersButton.LeanScale(Vector3.one, 0.8f).setEaseOutBack();
     }
 
     public void UpdateCoins(int amount)

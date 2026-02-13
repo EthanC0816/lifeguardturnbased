@@ -217,17 +217,27 @@ public class DungeonGenerator : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
 
-        PlayerController[] players = FindObjectsOfType<PlayerController>();
+        // Include inactive players too
+        PlayerController[] players = FindObjectsOfType<PlayerController>(true);
 
         System.Array.Sort(players, (a, b) => a.name.CompareTo(b.name));
 
+        int activePlayers = Mathf.Min(MainMenu.playerCount, players.Length);
+
+        // First, set active state correctly
         for (int i = 0; i < players.Length; i++)
+        {
+            bool shouldBeActive = i < activePlayers;
+            players[i].gameObject.SetActive(shouldBeActive);
+        }
+
+        // Then teleport only the active ones
+        for (int i = 0; i < activePlayers; i++)
         {
             if (i < graveSpawnPoints.Count)
             {
                 players[i].transform.position = graveSpawnPoints[i].position;
                 players[i].transform.rotation = graveSpawnPoints[i].rotation * Quaternion.Euler(0, 180, 0);
-
                 players[i].currentSpaceIndex = 0;
             }
             else
@@ -236,6 +246,7 @@ public class DungeonGenerator : MonoBehaviour
             }
         }
     }
+
     IEnumerator GhostRiseSequence()
     {
         yield return new WaitForSeconds(1f);
