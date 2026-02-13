@@ -8332,6 +8332,22 @@ MonoBehaviour:
     minPosition: {x: 0, y: 0}
     maxPosition: {x: 6, y: 6}
     obligatory: 0
+  - room: {fileID: 1365023568133973965, guid: 4e9f73f799fe7624f9dd1cc41c56c9e5, type: 3}
+    minPosition: {x: 0, y: 0}
+    maxPosition: {x: 6, y: 6}
+    obligatory: 0
+  - room: {fileID: 142513347442446750, guid: f63202e05b1c6a4438c91aaa89f9c529, type: 3}
+    minPosition: {x: 0, y: 0}
+    maxPosition: {x: 6, y: 6}
+    obligatory: 0
+  - room: {fileID: 4111971295001070837, guid: 844d0cc0414775643a1e02e73643719f, type: 3}
+    minPosition: {x: 0, y: 0}
+    maxPosition: {x: 6, y: 6}
+    obligatory: 0
+  - room: {fileID: 7503129158974691528, guid: e59e3e6455609e64198e96d19ebdd468, type: 3}
+    minPosition: {x: 0, y: 0}
+    maxPosition: {x: 6, y: 6}
+    obligatory: 0
   offset: {x: 3.3, y: 3.3}
   ghosts:
   - {fileID: 1843188282}
